@@ -33,6 +33,9 @@ class TcrsController(object):
     def select_project_and_activity(self, project, activity):
         pass
 
+    def select_spent_hours(self, date, activity):
+        pass
+
     def save_record(self):
         driver = self.driver
         driver.find_element_by_name("save2").click()
