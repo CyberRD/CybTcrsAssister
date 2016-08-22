@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from Base import build_activities
+# from Page.ActivityItemHelp.Base import build_activities
+from ActivityItemHelp import build_activities
+
 
 _activity0_options = [
     u"管理事務_如時程,資源規劃與管理等 <<1.2.3>>",
