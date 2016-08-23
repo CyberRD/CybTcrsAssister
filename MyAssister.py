@@ -2,16 +2,16 @@
 
 import logging
 
-from Page.TcrsControl import TcrsController
-from ProfileControl import ProfileLoader
+from PageObject.PageTcrs import PageTcrs
+from Control import Profile
 
 _logger = logging.getLogger(__name__)
 
 
-profile = ProfileLoader('Profile.ini')
+profile = Profile('Profile.ini')
 
 
-controller = TcrsController()
+controller = PageTcrs()
 controller.navigate_to_timecard_page(profile.login_name, profile.login_pwd)
 controller.fill_activity(profile.date_start, profile.date_end)
 

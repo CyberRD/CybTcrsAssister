@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# from Page.ActivityItemHelp.Base import build_activities
+# from PageObject.ActivityItemHelp.Base import build_activities
 from ActivityItemHelp import build_activities
 
 

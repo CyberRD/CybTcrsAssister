@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 TCRS_BASE_URL = "https://tcrs.cybersoft4u.com.tw/"
 
 
-class TcrsController(object):
+class PageTcrs(object):
 
     PAGE_URL = "/TCRS/login.jsp"
 
@@ -60,5 +60,5 @@ if __name__ == '__main__':
         datefmt='%y-%m-%d %H:%M:%S'
     )
 
-    controller = TcrsController()
+    controller = PageTcrs()
     controller.navigate_to_timecard_page()
