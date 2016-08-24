@@ -13,7 +13,9 @@ profile = Profile('Profile.ini')
 
 controller = PageTcrs()
 controller.navigate_to_timecard_page(profile.login_name, profile.login_pwd)
-controller.fill_activity(profile.date_start, profile.date_end)
+controller.fill_activity(profile.date_start,
+                         profile.date_end,
+                         virtual_activities_map)
 
 
 if __name__ == '__main__':
