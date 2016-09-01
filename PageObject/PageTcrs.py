@@ -39,18 +39,22 @@ class PageTcrs(object):
 
         driver.find_element_by_link_text(loc.tab_timecard).click()
 
-    def select_activity(self, activity_name, project_name=None):
-        pass
+    def select_activity(self, rank, project_name, activity_name):
+        raise NotImplementedError()
 
-    def select_spent_hours(self, date, activity_name):
-        pass
+    def select_spent_hours(self, date, activity_name, hour):
+        raise NotImplementedError()
 
     def is_spent_hours_set(self, date, activity_name):
-        pass
+        raise NotImplementedError()
 
-    def save_record(self):
+    def click_save(self):
         driver = self.driver
         driver.find_element_by_name("save2").click()
+
+    def click_submit(self):
+        driver = self.driver
+        driver.find_element_by_name("submit").click()
 
 
 if __name__ == '__main__':
