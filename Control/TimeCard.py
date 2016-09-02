@@ -25,7 +25,7 @@ class Action(PageTcrs):
         raise NotImplementedError()
 
     def is_before_start_date(self, start_date):
-        raise  NotImplementedError()
+        raise NotImplementedError()
 
 
 class TimeCardActivityMap(object):
