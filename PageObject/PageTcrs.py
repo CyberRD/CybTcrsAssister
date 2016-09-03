@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import NoAlertPresentException
-import time, re
 
 from loc import TcrsControl as loc
 
@@ -40,7 +35,32 @@ class PageTcrs(object):
         driver.find_element_by_link_text(loc.tab_timecard).click()
 
     def select_activity(self, index, project_name, activity_name):
-        raise NotImplementedError()
+        """
+
+        :param index: start from 0
+        :param project_name: name of project name
+        :param activity_name: name of activity name
+        :return:
+        """
+        driver = self.driver
+
+        self.select_project(index, project_name)
+
+        activity_loc_name = 'activity%s' % str(index)
+        Select(driver.find_element_by_name(activity_loc_name))\
+            .select_by_visible_text(activity_name)
+
+    def select_project(self, index, project_name):
+        """
+
+        :param index: start from 0
+        :param project_name:
+        :return:
+        """
+        driver = self.driver
+        proj_loc_name = 'project%s' % str(index)
+        Select(driver.find_element_by_name(proj_loc_name)) \
+            .select_by_visible_text(project_name)
 
     def select_spent_hours(self, loc, hour):
         driver = self.driver
@@ -85,11 +105,30 @@ class PageTcrs(object):
         :param index: start from 0
         :return:
         """
-        driver = self.driver
-
         name = "activity" + str(index)
 
         return self.get_selected_value(name)
+
+    def click_next_week(self):
+        driver = self.driver
+
+        loc = "next_week >>"
+        driver.find_element_by_link_text(loc).click()
+
+    def click_last_week(self):
+        driver = self.driver
+
+        loc = "<< last_week"
+        driver.find_element_by_link_text(loc).click()
+
+    def navigate_to_date(self, date):
+        driver = self.driver
+
+        date_choose_path = "TCRS/Timecard/timecard_week/daychoose.jsp?cho_date=%s" % str(date)
+        driver.get(self.base_url + date_choose_path)
+
+        # assert on the page
+        # assert page has been loaded finished
 
     def test(self):
         driver = self.driver
@@ -108,5 +147,6 @@ if __name__ == '__main__':
     controller.select_spent_hours("record1_3", "4")
     print controller.get_weekday_of_date(1)
     print controller.get_activity_name_by_index(0)
+    controller.navigate_to_date('2016-09-22')
     # print controller.get_selected_vlaue("project4")
     # controller.test()
