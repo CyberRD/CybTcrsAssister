@@ -2,21 +2,9 @@
 
 import logging
 
-# from PageObject.PageTcrs import PageTcrs
-from Control.Profile import ProfileLoader
-from Control import TimeCard
+from Control.TcrsAgent import Agent
 
 _logger = logging.getLogger(__name__)
-
-
-profile = ProfileLoader('Profile.ini')
-
-
-controller = TimeCard.Action()
-controller.navigate_to_timecard_page(profile.login_name, profile.login_pwd)
-controller.fill_activity(profile.date_start,
-                         profile.date_end,
-                         virtual_activities_map)
 
 
 if __name__ == '__main__':
@@ -25,3 +13,10 @@ if __name__ == '__main__':
         level=logging.DEBUG,
         datefmt='%y-%m-%d %H:%M:%S'
     )
+
+    # profile = Loader("Profile.ini")
+    #
+    # activity_map1 = VirtualActivitiesMatrix(profile.weekday_activities,
+    #                                         profile.max_work_hour)
+
+

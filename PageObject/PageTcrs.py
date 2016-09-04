@@ -14,7 +14,7 @@ class PageTcrs(object):
 
     PAGE_URL = "/TCRS/login.jsp"
 
-    def __init__(self, web_driver):
+    def __init__(self):
         self.driver = webdriver.Chrome()
         self.driver.implicitly_wait(30)
         self.base_url = TCRS_BASE_URL
