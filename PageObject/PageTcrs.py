@@ -81,7 +81,7 @@ class PageTcrs(object):
         driver = self.driver
         driver.find_element_by_name("submit").click()
 
-    def get_weekday_of_date(self, weekday):
+    def get_date_of_weekday(self, weekday):
         """
 
         :param weekday: start from 1, ex: Monday=1, Tuesday=2...etc
@@ -145,7 +145,7 @@ if __name__ == '__main__':
     controller = PageTcrs('Firefox')
     controller.navigate_to_timecard_page('alanliu', 'S@201609')
     controller.select_spent_hours("record1_3", "4")
-    print controller.get_weekday_of_date(1)
+    print controller.get_date_of_weekday(1)
     print controller.get_activity_name_by_index(0)
     controller.navigate_to_date('2016-09-22')
     # print controller.get_selected_vlaue("project4")
