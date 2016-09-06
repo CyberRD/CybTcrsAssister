@@ -1,9 +1,10 @@
 # -*- coding: utf8 -*-
 import logging
 
-from TcrsDataCollection import WeekActivitiesMatrix
+from TcrsDataCollection import WeekActivities
 from PageObject.PageTcrs import PageTcrs
 import TcrsProfile
+from PageObject.loc.ActivityOption import activities_to_project
 
 _logger = logging.getLogger(__name__)
 
@@ -23,8 +24,11 @@ class Agent(object):
     def fillin_by_profile(self):
 
         profile = self.tcrs_profile
-        activities_matrix = WeekActivitiesMatrix(profile.weekday_activities,
-                                                 profile.max_work_hour)
+        week_activities = WeekActivities(profile.weekday_activities,
+                                           profile.max_work_hour)
+
+        for activity, hour_list in week_activities.matrix.iteritems():
+            print activity, activities_to_project.get(activity)
 
     def fillin_week_timecard(self,
                              activities_matrix,
