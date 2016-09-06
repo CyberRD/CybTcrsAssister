@@ -15,6 +15,7 @@ class Loader(object):
         self.login_name = self._config.get('account', 'name')
         self.login_pwd = self._config.get('account', 'pwd')
 
+        # TODO: should check date format... 2016-09-05
         self.date_start = self._config.get('timecard-setting', 'date_start')
         self.date_end = self._config.get('timecard-setting', 'date_end')
         self.max_work_hour = self._config.get('timecard-setting', 'max_work_hour')
