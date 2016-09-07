@@ -25,27 +25,50 @@ class Agent(object):
     def run_steps(self):
 
         profile = self.tcrs_profile
-        week_activities = WeekActivities(profile.weekday_activities,
-                                         profile.max_work_hour)
+        page = self.tcrs_page
 
-        # self.tcrs_page.navigate_to_date(profile.date_start)
-        """
-        while(True):
-            fill in activities(weekday_start, weekday_end)
-            if not end_date_in_the_page:
-                page.click_next()
+        page.navigate_to_date(profile.date_start)
+        while True:
+            weekday_start, weekday_end = self._get_page_weekday_range_by_date()
+            week_activities = WeekActivities(profile.weekday_activities,
+                                             profile.max_work_hour)
+            self.fillin_week_timecard(week_activities.matrix,
+                                      weekday_start,
+                                      weekday_end)
+            # page.click_save()
+
+            # TODO: rename appropriate name of _page_date_exceed_end_date
+            if not self._page_date_exceed_end_date():
+                page.click_next_week()
             else:
+                # exceed end date
                 break
-        """
 
-        for activity, hour_list in week_activities.matrix.iteritems():
-            print activity, activities_to_project.get(activity)
+        # for activity, hour_list in week_activities.matrix.iteritems():
+        #     print activity, activities_to_project.get(activity)
 
     def fillin_week_timecard(self,
                              activities_matrix,
                              weekday_start=1,
                              weekday_end=5):
-        pass
+
+        page = self.tcrs_page
+
+        activity_count = 1
+        for activity, hour_list in activities_matrix.iteritems():
+
+            project = activities_to_project.get(activity)
+            page.select_activity(activity_count - 1 ,
+                                 "2016Y_SDD",
+                                 u"服務支援(同事間備援、跨部門/處支援) <<1.1.3>>")
+            # page.select_activity(activity_count,
+            #                      unicode(project).decode('utf-8', 'ignore'),
+            #                      unicode(activity).decode('utf-8', 'ignore'))
+
+            for weekday in range(weekday_start, weekday_end + 1):
+                page.select_spent_hours(activity_count, weekday, str(hour_list[weekday]))
+
+            activity_count += 1
 
     def _get_page_weekday_range_by_date(self):
 
@@ -55,20 +78,27 @@ class Agent(object):
         weekday_end = 5
 
         # find start weekday
+        date_start_obj = datetime.strptime(profile.date_start, "%Y-%m-%d")
         for weekday in range(1, 6):
             page_date, weekday_str = self.tcrs_page.get_date_of_weekday(weekday)
-            # TODO: compare date
-            if page_date >= profile.date_start:
+            page_date_obj = datetime.strptime(page_date, "%m-%d")
+            page_date_obj = page_date_obj.replace(date_start_obj.year)
+
+            if page_date_obj >= date_start_obj:
                 weekday_start = weekday
                 break
             else:
                 continue
 
         # find end weekday
+        date_end_obj = datetime.strptime(profile.date_end, "%Y-%m-%d")
         for weekday in range(1, 6)[::-1]:
             page_date, weekday_str = self.tcrs_page.get_date_of_weekday(weekday)
-            # TODO: compare date
-            if page_date <= profile.date_end:
+
+            page_date_obj = datetime.strptime(page_date, "%m-%d")
+            page_date_obj = page_date_obj.replace(date_end_obj.year)
+
+            if page_date_obj <= date_end_obj:
                 weekday_end = weekday
                 break
             else:
@@ -76,26 +106,26 @@ class Agent(object):
 
         return weekday_start, weekday_end
 
-    def end_date_in_the_page(self):
+    def _page_date_exceed_end_date(self):
 
         profile = self.tcrs_profile
         date_end_obj = datetime.strptime(profile.date_end, "%Y-%m-%d")
 
         end_in_the_page = False
 
-        for weekday in range(1, 6)[::-1]:
+        for weekday in range(1, 8)[::-1]:
 
             page_date, weekday_str = self.tcrs_page.get_date_of_weekday(weekday)
             page_date_obj = datetime.strptime(page_date, "%m-%d")
             page_date_obj = page_date_obj.replace(date_end_obj.year)
 
-            # TODO: compare date
             if page_date_obj < date_end_obj:
                 continue
-            elif page_date_obj == date_end_obj:
+            elif page_date_obj >= date_end_obj:
                 end_in_the_page = True
             else:
-                raise Exception("date_end setting error!!")
+                _logger.error(page_date)
+                raise Exception("Error page date.")
 
         return end_in_the_page
 
@@ -107,5 +137,6 @@ if __name__ == '__main__':
     )
 
     agent = Agent("..\Profile.ini")
+    agent.navigate_to_timecard_page()
     agent.run_steps()
     # agent.navigate_to_timecard_page()
