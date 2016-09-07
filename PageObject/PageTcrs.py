@@ -62,16 +62,16 @@ class PageTcrs(object):
         Select(driver.find_element_by_name(proj_loc_name)) \
             .select_by_visible_text(project_name)
 
-    def select_spent_hours(self, activity_rank, weekday, hour):
+    def select_spent_hours(self, activity_index, weekday, hour):
         """
-        :param activity_rank: start from 1
+        :param activity_index: start from 0
         :param weekday: start from 1
         :param hour: specific the spent hour
         """
         driver = self.driver
 
-        loc = "record%s_%s" % (str(activity_rank - 1), str(weekday - 1))
-
+        loc = "record%s_%s" % (str(activity_index), str(weekday - 1))
+        _logger.debug('Select hour: %s' % hour)
         Select(driver.find_element_by_name(loc)).select_by_visible_text(hour)
         # _logger.debug(Select(driver.find_element_by_name(loc)).first_selected_option.text)
 

@@ -54,21 +54,25 @@ class Agent(object):
 
         page = self.tcrs_page
 
-        activity_count = 1
+        activity_index = 0
         for activity, hour_list in activities_matrix.iteritems():
 
             project = activities_to_project.get(activity)
-            page.select_activity(activity_count - 1 ,
-                                 "2016Y_SDD",
-                                 u"服務支援(同事間備援、跨部門/處支援) <<1.1.3>>")
-            # page.select_activity(activity_count,
-            #                      unicode(project).decode('utf-8', 'ignore'),
-            #                      unicode(activity).decode('utf-8', 'ignore'))
+            # _logger.debug(type(project), type(activity))
+
+            activity = unicode(activity, 'utf-8')
+            page.select_activity(activity_index,
+                                 project,
+                                 activity)
 
             for weekday in range(weekday_start, weekday_end + 1):
-                page.select_spent_hours(activity_count, weekday, str(hour_list[weekday]))
+                # TODO: dirty work
+                hour = str(hour_list[weekday])
+                if hour != "0.0":
+                    if float(hour) % 1 == 0.0: hour = str(int(float(hour)))
+                    page.select_spent_hours(activity_index, weekday, hour)
 
-            activity_count += 1
+            activity_index += 1
 
     def _get_page_weekday_range_by_date(self):
 
