@@ -49,26 +49,47 @@ class Agent(object):
                              activities_matrix,
                              weekday_start=1,
                              weekday_end=5):
+        """
+        :param activities_matrix: which is a virtual data structure
+                                  from TcrsDataCollection.WeekActivities,
+                                  so it not consider with real selected status
+        :param weekday_start: on this page which weekday should be for choosing start day
+                             , it depends on the profile setting
+        :param weekday_end: on this page which weekday should be for choosing end day
+                            , it depends on the profile setting
+        """
 
         page = self.tcrs_page
 
-        # TODO: still need check the activities have been selected.
+        already_selected_activity_list = []
+        selected_activity_index = 0
+        # check if there's selected activity or not
+        while True:
+            if page.is_activity_selected(selected_activity_index):
+                already_selected_activity_list.append(page.get_selected_activity(selected_activity_index))
+                selected_activity_index += 1
+            else:
+                break
 
-        # prepare a list for duplicated activities
-        target_activity_list = []
+        # prepare a matrix for selected and un-selected activities working hour
         for activity, hour_list in activities_matrix.iteritems():
-            target_activity_list.append((activity, hour_list))
+            if unicode(activity, 'utf-8') in already_selected_activity_list:
+                _logger.debug("%s has been selected in this page." % activity)
+                tmp_index = already_selected_activity_list.index(unicode(activity, 'utf-8'))
+                already_selected_activity_list[tmp_index] = (activity, hour_list)
+            else:
+                already_selected_activity_list.append((activity, hour_list))
 
         activity_index = 0
-        # for activity, hour_list in activities_matrix.iteritems():
-        for activity, hour_list in target_activity_list:
+        # fill in hours
+        for activity, hour_list in already_selected_activity_list:
 
             project = activities_to_project.get(activity)
             # _logger.debug(type(project), type(activity))
 
-            # activity locator should be unicode
-            activity = unicode(activity, 'utf-8')
-            page.select_activity(activity_index, project, activity)
+            if activity_index >= selected_activity_index:
+                # activity locator should be unicode
+                page.select_activity(activity_index, project, unicode(activity, 'utf-8'))
 
             for weekday in range(weekday_start, weekday_end + 1):
                 spent_hour = hour_list[weekday]
@@ -140,6 +161,17 @@ class Agent(object):
                 raise Exception("Error page date.")
 
         return end_in_the_page
+
+    def test(self):
+
+        page = self.tcrs_page
+
+        page.navigate_to_date("2016-09-01")
+        print page.get_selected_activity(0)
+        print type(page.get_selected_activity(0))
+        print page.is_activity_selected(0)
+        print page.is_activity_selected(4)
+
 
 if __name__ == '__main__':
     logging.basicConfig(
