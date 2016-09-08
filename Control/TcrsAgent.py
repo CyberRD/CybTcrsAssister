@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 import logging
 from datetime import datetime
+import time
 
 from TcrsDataCollection import WeekActivities
 from PageObject.PageTcrs import PageTcrs
@@ -36,7 +37,10 @@ class Agent(object):
             self.fillin_week_timecard(week_activities.matrix,
                                       weekday_start,
                                       weekday_end)
-            # page.click_save()
+            page.click_save()
+
+            # TODO: need to refactor to check all working hours have been selected and saved.
+            time.sleep(5)
 
             # TODO: rename appropriate name of _page_date_exceed_end_date
             if not self._page_date_exceed_end_date():
@@ -79,6 +83,9 @@ class Agent(object):
                 already_selected_activity_list[tmp_index] = (activity, hour_list)
             else:
                 already_selected_activity_list.append((activity, hour_list))
+
+        _logger.debug("already_selected_activity_list:")
+        _logger.debug(already_selected_activity_list)
 
         activity_index = 0
         # fill in hours
