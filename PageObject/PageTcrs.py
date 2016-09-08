@@ -62,19 +62,31 @@ class PageTcrs(object):
         Select(driver.find_element_by_name(proj_loc_name)) \
             .select_by_visible_text(project_name)
 
-    def is_activity_selected(self, index):
+    def get_selected_activity(self, index):
         """
         :param index: start from 0
         """
         activity_loc_name = 'activity%s' % str(index)
-        return self.get_selected_value(activity_loc_name) != "-- select activity --"
+        return self.get_selected_value(activity_loc_name)
+
+    def is_activity_selected(self, index):
+        """
+        :param index: start from 0
+        """
+        return self.get_selected_activity(index) != "-- select activity --"
+
+    def get_selected_project(self, index):
+        """
+        :param index: start from 0
+        """
+        proj_loc_name = 'project%s' % str(index)
+        return self.get_selected_value(proj_loc_name)
 
     def is_project_selected(self, index):
         """
         :param index: start from 0
         """
-        proj_loc_name = 'project%s' % str(index)
-        return self.get_selected_value(proj_loc_name) != "-- select project --"
+        return self.get_selected_project(index) != "-- select project --"
 
     def select_spent_hours(self, activity_index, weekday, hour):
         """
