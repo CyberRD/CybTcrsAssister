@@ -32,6 +32,7 @@ class Agent(object):
             weekday_start, weekday_end = self._get_page_weekday_range_by_date()
             week_activities = WeekActivities(profile.weekday_activities,
                                              profile.max_work_hour)
+
             self.fillin_week_timecard(week_activities.matrix,
                                       weekday_start,
                                       weekday_end)
@@ -44,9 +45,6 @@ class Agent(object):
                 # exceed end date
                 break
 
-        # for activity, hour_list in week_activities.matrix.iteritems():
-        #     print activity, activities_to_project.get(activity)
-
     def fillin_week_timecard(self,
                              activities_matrix,
                              weekday_start=1,
@@ -54,8 +52,16 @@ class Agent(object):
 
         page = self.tcrs_page
 
-        activity_index = 0
+        # TODO: still need check the activities have been selected.
+
+        # prepare a list for duplicated activities
+        target_activity_list = []
         for activity, hour_list in activities_matrix.iteritems():
+            target_activity_list.append((activity, hour_list))
+
+        activity_index = 0
+        # for activity, hour_list in activities_matrix.iteritems():
+        for activity, hour_list in target_activity_list:
 
             project = activities_to_project.get(activity)
             # _logger.debug(type(project), type(activity))
@@ -144,5 +150,7 @@ if __name__ == '__main__':
 
     agent = Agent("..\Profile.ini")
     agent.navigate_to_timecard_page()
-    agent.run_steps()
+    agent.test()
+    # agent.navigate_to_timecard_page()
+    # agent.run_steps()
     # agent.navigate_to_timecard_page()
