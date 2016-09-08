@@ -60,19 +60,21 @@ class Agent(object):
             project = activities_to_project.get(activity)
             # _logger.debug(type(project), type(activity))
 
+            # activity locator should be unicode
             activity = unicode(activity, 'utf-8')
-            page.select_activity(activity_index,
-                                 project,
-                                 activity)
+            page.select_activity(activity_index, project, activity)
 
             for weekday in range(weekday_start, weekday_end + 1):
-                # TODO: dirty work
-                hour = str(hour_list[weekday])
-                if hour != "0.0":
-                    if float(hour) % 1 == 0.0: hour = str(int(float(hour)))
-                    page.select_spent_hours(activity_index, weekday, hour)
+                spent_hour = hour_list[weekday]
+                if spent_hour > 0:
+                    spent_hour = self._convert_to_tcrs_loc_format(spent_hour)
+                    page.select_spent_hours(activity_index, weekday, spent_hour)
 
             activity_index += 1
+
+    @classmethod
+    def _convert_to_tcrs_loc_format(cls, spent_hour):
+        return str(int(spent_hour)) if spent_hour % 1.0 == 0.0 else str(spent_hour)
 
     def _get_page_weekday_range_by_date(self):
 

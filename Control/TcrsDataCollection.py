@@ -18,25 +18,25 @@ class WeekActivities(object):
         for weekday in range(1, 6):
             for activity_name, time_range in weekday_activities_row_setting[weekday - 1]:
 
-                _logger.debug("%s, %s" % (activity_name, time_range))
+                # _logger.debug("%s, %s" % (activity_name, time_range))
                 cur_work_hour = self._total_spent_hours_of_weekday(weekday)
-                # print cur_work_hour
+
                 if not str(activity_name).startswith("rest"):
-                    # add to dict
-                    self._build_activity(activity_name)
                     spent_hour = self._get_spent_hour(time_range,
                                                       self._max_work_hour,
                                                       cur_work_hour)
                 else:
                     # build rest
                     activity_name = time_range  # this is the ini input format
-
-                    self._build_activity(activity_name)
                     spent_hour = self._max_work_hour - cur_work_hour
-                    print spent_hour
                     spent_hour = self._get_hour_format(spent_hour)
 
-                self._activities_matrix.get(activity_name)[weekday] = spent_hour
+                if spent_hour > 0:
+                    '''
+                    only spent hour > 0, the activity will be set
+                    '''
+                    self._build_activity(activity_name)
+                    self._activities_matrix.get(activity_name)[weekday] = spent_hour
 
     @property
     def matrix(self):
