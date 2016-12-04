@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import logging
-
 from Control.TcrsAgent import Agent
+from Utils.LoggingHelper import *
 
-_logger = logging.getLogger(__name__)
+logger = get_logger('./logging.ini')
 
 logging.basicConfig(
     format='[%(asctime)s] %(levelname)s [%(funcName)s] - %(message)s [%(filename)s:%(lineno)d]',
