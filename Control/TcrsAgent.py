@@ -8,13 +8,11 @@ from PageObject.PageTcrs import PageTcrs
 import TcrsProfile
 from PageObject.loc.ActivityOption import activities_to_project
 
-_logger = logging.getLogger(__name__)
-
 
 class Agent(object):
 
-    def __init__(self, profile_path):
-        self.tcrs_profile = TcrsProfile.Loader(profile_path)
+    def __init__(self, profile_path, office_pwd):
+        self.tcrs_profile = TcrsProfile.Loader(profile_path, office_pwd)
         self.tcrs_page = PageTcrs()
 
     def navigate_to_timecard_page(self):
@@ -78,14 +76,14 @@ class Agent(object):
         # prepare a matrix for selected and un-selected activities working hour
         for activity, hour_list in activities_matrix.iteritems():
             if unicode(activity, 'utf-8') in already_selected_activity_list:
-                _logger.debug("%s has been selected in this page." % activity)
+                logging.debug("%s has been selected in this page." % activity)
                 tmp_index = already_selected_activity_list.index(unicode(activity, 'utf-8'))
                 already_selected_activity_list[tmp_index] = (activity, hour_list)
             else:
                 already_selected_activity_list.append((activity, hour_list))
 
-        _logger.debug("already_selected_activity_list:")
-        _logger.debug(already_selected_activity_list)
+        logging.debug("already_selected_activity_list:")
+        logging.debug(already_selected_activity_list)
 
         activity_index = 0
         # fill in hours
@@ -126,6 +124,7 @@ class Agent(object):
 
             if page_date_obj >= date_start_obj:
                 weekday_start = weekday
+                logging.debug("select start weekday=%s" % str(weekday))
                 break
             else:
                 continue
@@ -140,6 +139,7 @@ class Agent(object):
 
             if page_date_obj <= date_end_obj:
                 weekday_end = weekday
+                logging.debug("select end weekday=%s" % str(weekday))
                 break
             else:
                 continue
@@ -164,7 +164,7 @@ class Agent(object):
             elif page_date_obj >= date_end_obj:
                 end_in_the_page = True
             else:
-                _logger.error(page_date)
+                logging.error(page_date)
                 raise Exception("Error page date.")
 
         return end_in_the_page

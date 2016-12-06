@@ -5,7 +5,6 @@ from selenium.webdriver.support.ui import Select
 
 from loc import TcrsControl as loc
 
-_logger = logging.getLogger(__name__)
 
 TCRS_BASE_URL = "https://tcrs.cybersoft4u.com.tw/"
 
@@ -97,7 +96,7 @@ class PageTcrs(object):
         driver = self.driver
 
         loc = "record%s_%s" % (str(activity_index), str(weekday - 1))
-        _logger.debug('Select hour: %s' % hour)
+        logging.debug('Select hour: %s' % hour)
         Select(driver.find_element_by_name(loc)).select_by_visible_text(hour)
         # _logger.debug(Select(driver.find_element_by_name(loc)).first_selected_option.text)
 
@@ -126,7 +125,7 @@ class PageTcrs(object):
         xpath = "//tr[2]/td[%s]" % str(index_of_weekday)
         print xpath
         date_weekday = driver.find_element_by_xpath(xpath).text
-        _logger.debug(date_weekday)
+        logging.debug(date_weekday)
         date = date_weekday.split('\n')[0].strip()
         weekday = date_weekday.split('\n')[1].strip()
 
