@@ -2,18 +2,16 @@
 import logging
 from ConfigParser import SafeConfigParser
 
-_logger = logging.getLogger(__name__)
-
 
 class Loader(object):
 
-    def __init__(self, profile):
+    def __init__(self, profile, pwd):
 
         self._config = SafeConfigParser()
         self._config.read(profile)
 
         self.login_name = self._config.get('account', 'name')
-        self.login_pwd = self._config.get('account', 'pwd')
+        self.login_pwd = pwd
 
         # TODO: should check date format... 2016-09-05
         self.date_start = self._config.get('timecard-setting', 'date_start')
